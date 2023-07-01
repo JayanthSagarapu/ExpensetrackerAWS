@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"
+    asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+    asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+   
+  <title>Expense Tracker</title>
+</head>
+
+</html>
+
+<body style="background-color: rgba(156, 151, 151, 0.852)">
+  <header id="header" class="text-white text-center p-4 d-flex" style="background-color: rgb(52, 52, 54)">
+    <div class="w-75" style="margin-left: 20%;">
+      <h1 class="">Expense Tracker</h1>
+    </div>
+
+
+    <div id="leaderboardBtn" class="  float-right">
+      <button id='showleaderBtn' class="btn border border-dark float-right h-100 ml-auto bg-success text-white"
+        style="visibility: hidden; cursor: pointer;">Show leaderboard</button>
+    </div>
+    <button id="raz-btn" class=" btn border border-dark float-right bg-white ml-auto"
+      style="cursor:pointer;width: 13.3%;">Buy Premium</button>
+  </header>
+
+
+  <div id="Expense-dates" class="text-white d-flex flex-row w-100 mb-3 " style="background-color: rgb(52, 52, 54)">
+    <div id="addexpense" class="w-25 "><button id="addbtn" class="text-white w-100 p-1"
+        style="background-color: rgb(52, 52, 54)">Add</a></div>
+    <div id="Expense-daily" class="w-25"><button id="dailybtn" class="text-white w-100 p-1"
+        style="background-color: rgb(52, 52, 54)">Daily</button></div>
+    <div id="Expense-monthly" class="w-25"><button id="monthlybtn" class="text-white w-100 p-1"
+        style="background-color: rgb(52, 52, 54)">Monthly</button></div>
+    <div id="Expense-yearly" class="w-25"><button id="yearlybtn" class="text-white w-100 p-1"
+        style="background-color: rgb(52, 52, 54)">Yearly</button></div>
+  </div>
+
+  <!-- <div id="addbtnpage" class="active"> -->
+    <div id="expensetotal" class="container card card-body w-75 bg-secondary p-1 d-flex flex-row mb-1">
+      <div class="card card-body w-25 bg-white ">
+        <label for="earning" style="text-align: center; font-size: large;">Earning:</label>
+        <h5 id="Earning" class="align-self-center"></h5>
+      </div>
+      <div class="card card-body w-25 bg-white ">
+        <label for="expense" style="text-align: center; font-size: large;">Expense:</label>
+        <h5 id="Expense" class="align-self-center"></h5>
+      </div>
+      <div class="card card-body w-25 bg-white ">
+        <label for="balance" style="text-align: center;text-decoration: solid;font-size: large;">Balance:</label>
+        <h5 id="balance" class="align-self-center"></h5>
+      </div>
+    </div>
+
+      <div class="m-auto w-75" id="downloadExpense"> 
+        <!-- <button id="downloadexpense" class="btn border border-dark bg-dark text-white w-25" style="margin-left: 74%;"> Download File</button> -->
+      </div>
+        
+
+    
+    <div class="container card card-body w-75 mt-2 mb-2">
+      <form id="form" action="#" method="post" onsubmit="addItem(event)" class="align-self-center">
+        Choose expenseamount:
+        <input type="number" id="amount" />
+        Choose description:
+        <input type="text" id="description" />
+        Choose a category:
+        <select name="category" id="category">
+          <option></option>
+          <option value="petrol">Petrol/diesel</option>
+          <option value="Grocery">Grocery</option>
+          <option value="House">House</option>
+          <option value="Food">Food</option>
+          <option value="movie">Movie</option>
+          <option value="gym">Gym/Fitness</option>
+          <option value="Bills">Bills</option>
+        </select>
+        <button value="submit" id="submit" class="btn border border-dark ml-3">
+          Add Expense
+        </button>
+      </form>
+    </div>
+    
+      <div style="margin-left: 40%; width: 15%;" class="container bg-dark text-white text-center mt-2 mb-1 p-2">
+        <select class="form-select w-75 text-center" id="limit">
+                  <option selected ><h3>Items Per Page</h3></option>
+                  <option value="2">2</option>
+                  <option value="4">4</option>
+                  <option value="6">6</option>
+                  <option value="8">8</option>
+                  <option value="10">10</option>
+              </select>
+      </div>
+      <div id="pagination" class="container" style="margin-bottom: 3px; margin-left: 39%;width: 20%;">
+        <button id="prevPageBtn" class="border border-dark bg-dark text-white" disabled >Previous Page</button>
+         <button id="currentPageBtn" class="border border-dark bg-dark text-white"> 1 </button>
+        <button id="nextPageBtn" class="border border-dark bg-dark text-white">Next Page</button>
+      </div>
+
+    <ul id="list" class="list-group">
+      <li class="list-group-item align-self-center w-75 mb-2 p-3 d-none "
+        style="background-color: rgba(44, 42, 47, 0.818);">
+        <button class="btn btn-sm float-right delete">Delete</button>
+        <button class="btn btn-sm float-right edit mr-2">Edit</button>
+      </li>
+    </ul>
+    <div id="leaderboard" class="container card card-body w-75 d-none"></div>
+
+  <!-- </div> -->
+
+  <!-- <div style="list-style: none;" class="m-auto w-75 d-none" id="dailybtnpage">
+    <li class="bg-dark mb-1 text-dark d-flex flex-row p-4 "  ><div class="text-center border border-dark w-50 bg-white" style="font-size: large; font-weight: 500;">Total Credit(credit): </div><div id="total-credit" style="font-size: large; font-weight: 500;" class="text-center border border-dark w-50 ml-1 bg-white">.00</li>
+    <li class="bg-dark mb-1 text-dark d-flex flex-row p-4" ><div class="text-center border border-dark w-50 bg-white" style="font-size: large; font-weight: 500;">Expenses(debit): </div><div id="expenses-credit" style="font-size: large; font-weight: 500;" class="text-center border border-dark w-50 ml-1 bg-white">.00</li>
+  </div> -->
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+  <script src="../Expense/expense.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+
+</html>

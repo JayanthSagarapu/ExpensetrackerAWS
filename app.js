@@ -46,7 +46,7 @@ Order.belongsTo(User);
 User.hasMany(Forgotpassword);
 Forgotpassword.belongsTo(User);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 sequelize
   .sync()

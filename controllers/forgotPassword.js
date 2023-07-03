@@ -33,7 +33,7 @@ const forgotpassword = async (req, res) => {
         textContent: "Reset Your PassWord",
         htmlContent: `<p>Hello,</p>
                         <p>Please click the following link to reset your password:</p>
-                        <p><a href="http://localhost:4000/password/resetpassword/${id}">Reset password</a></p>
+                        <p><a href="http://13.51.162.236:4000/password/resetpassword/${id}">Reset password</a></p>
                         <p>If you did not request a password reset, please ignore this email.</p>
                         <p>Thank you!</p>`,
       };

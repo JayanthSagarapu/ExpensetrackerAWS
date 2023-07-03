@@ -211,34 +211,34 @@ function showDownloadBtn() {
   downloadBtn.textContent = "Download Expense";
   downloadBtn.className = "btn border border-dark bg-dark text-white w-25";
   downloadBtn.style = "margin-left: 74%;";
-  downloadBtn.addEventListener("click", handleDownloadBtn);
+  // downloadBtn.addEventListener("click", handleDownloadBtn);
 
   const downloadBtndiv = document.getElementById("downloadExpense");
   downloadBtndiv.appendChild(downloadBtn);
-}
 
-async function handleDownloadBtn() {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "http://13.51.162.236:4000/user/download",
-      {
-        headers: { Authorization: token },
+  downloadBtn.onclick = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://13.51.162.236:4000/user/download",
+        {
+          headers: { Authorization: token },
+        }
+      );
+      if (response.status === 200) {
+        //the bcakend is essentially sending a download link
+        //  which if we open in browser, the file would download
+        var a = document.createElement("a");
+        a.href = response.data.fileURl;
+        a.download = "myexpense.csv";
+        a.click();
+      } else {
+        throw new Error(response.data.message);
       }
-    );
-    if (response.status === 200) {
-      //the bcakend is essentially sending a download link
-      //  which if we open in browser, the file would download
-      var a = document.createElement("a");
-      a.href = response.data.fileURl;
-      a.download = "myexpense.csv";
-      a.click();
-    } else {
-      throw new Error(response.data.message);
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
+  };
 }
 
 razBtn.onclick = async function (e) {

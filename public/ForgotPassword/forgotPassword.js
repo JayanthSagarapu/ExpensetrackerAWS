@@ -17,7 +17,7 @@ async function forgetPassword(event) {
 
     if (email) {
       const response = await axios.post(
-        "http://13.51.162.236:4000/password/forgotpassword",
+        "http://localhost:4000/password/forgotpassword",
         {
           email: email,
         }

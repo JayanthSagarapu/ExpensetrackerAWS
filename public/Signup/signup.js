@@ -3,11 +3,11 @@ const loginBtn = document.getElementById("login");
 const errormsg = document.getElementById("error");
 
 signBtn.onclick = async () => {
-  window.location.href = "/Signup/signup.html";
+  window.location.href = "../Signup/signup.html";
 };
 
 loginBtn.onclick = async () => {
-  window.location.href = "/Login/login.html";
+  window.location.href = "../Login/login.html";
 };
 
 async function signUp(event) {
@@ -25,7 +25,7 @@ async function signUp(event) {
 
     if (username && email && password) {
       const response = await axios.post(
-        "http://13.51.162.236:4000/user/signup",
+        "http://localhost:4000/user/signup",
         obj
       );
       console.log(response);

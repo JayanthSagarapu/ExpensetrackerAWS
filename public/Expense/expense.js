@@ -5,38 +5,53 @@ const list = document.getElementById("list");
 const razBtn = document.getElementById("raz-btn");
 const message = document.getElementById("message");
 const Expense = document.getElementById("Expense");
+const Earning = document.getElementById("Earning");
+const earninginput = document.getElementById("earninginput");
+const Balance = document.getElementById("balance");
+
+function addEarning() {
+  const EarningAmount =
+    Number(Earning.textContent) + Number(earninginput.value);
+
+  localStorage.setItem("earningamount", EarningAmount);
+  Earning.textContent = localStorage.getItem("earningamount");
+}
 
 async function addItem(event) {
-  try {
-    event.preventDefault();
+  event.preventDefault();
 
-    const amount = event.target.amount.value;
-    const description = event.target.description.value;
-    const category = event.target.category.value;
+  const amount = event.target.amount.value;
+  const description = event.target.description.value;
+  const category = event.target.category.value;
 
-    const obj = {
-      amount,
-      description,
-      category,
-    };
+  ExpenseAmount = Number(Expense.textContent) + Number(amount);
+  localStorage.setItem("expenseamount", ExpenseAmount);
+  Expense.textContent = localStorage.getItem("expenseamount");
 
-    if (amount && description && category) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.post(
-          "http://13.51.162.236:4000/expenses/createExpense",
-          obj,
-          {
-            headers: { Authorization: token },
-          }
-        );
-        ShowOnScreen(response.data);
-      } catch (err) {
-        console.log(err);
-      }
+  const obj = {
+    amount,
+    description,
+    category,
+  };
+
+  if (amount && description && category) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:4000/expenses/createExpense",
+        obj,
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      console.log(response);
+
+      ShowOnScreen(response.data);
+      event.target.reset();
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.log(err);
   }
 }
 
@@ -79,7 +94,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const limit = document.getElementById("limit").value;
 
       const { data } = await axios.get(
-        `http://13.51.162.236:4000/getExpenses?page=${page}&limit=${limit}`,
+        `http://localhost:4000/getExpenses?page=${page}&limit=${limit}`,
         {
           headers: { Authorization: token },
         }
@@ -118,7 +133,9 @@ window.addEventListener("DOMContentLoaded", async () => {
 async function ShowOnScreen(res) {
   const token = localStorage.getItem("token");
 
-  Expense.textContent = Number(Expense.textContent) + Number(res.amount);
+  Earning.textContent = localStorage.getItem("earningamount");
+  Expense.textContent = localStorage.getItem("expenseamount");
+  Balance.textContent = Earning.textContent - Expense.textContent;
 
   const li = document.createElement("li");
 
@@ -143,11 +160,14 @@ async function ShowOnScreen(res) {
   delbtn.onclick = async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(`http://13.51.162.236:4000/deleteExpense/${res.id}`, {
+      await axios.delete(`http://localhost:4000/deleteExpense/${res._id}`, {
         headers: { Authorization: token },
       });
       list.removeChild(li);
-      Expense.textContent = Number(Expense.textContent) - Number(res.amount);
+      ExpenseAmount = Number(Expense.textContent) - Number(res.amount);
+      localStorage.setItem("expenseamount", ExpenseAmount);
+      Expense.textContent = localStorage.getItem("expenseamount");
+      Balance.textContent = +Balance.textContent + +res.amount;
     } catch (err) {
       console.log(err);
     }
@@ -161,7 +181,7 @@ async function ShowOnScreen(res) {
 
   editbtn.onclick = async () => {
     try {
-      await axios.delete(`http://13.51.162.236:4000/deleteExpense/${res.id}`, {
+      await axios.delete(`http://localhost:4000/deleteExpense/${res._id}`, {
         headers: { Authorization: token },
       });
       list.removeChild(li);
@@ -171,7 +191,11 @@ async function ShowOnScreen(res) {
     amountArea.value = res.amount;
     descriptionArea.value = res.description;
     categoryArea.value = res.category;
-    Expense.textContent = Number(Expense.textContent) - Number(res.amount);
+
+    ExpenseAmount = Number(Expense.textContent) - Number(res.amount);
+    localStorage.setItem("expenseamount", ExpenseAmount);
+    Expense.textContent = localStorage.getItem("expenseamount");
+    Balance.textContent = +Balance.textContent + +res.amount;
   };
 
   li.append(editbtn);
@@ -187,7 +211,7 @@ async function showLeaderBoard() {
     try {
       const token = localStorage.getItem("token");
       const leaderBoardData = await axios.get(
-        "http://13.51.162.236:4000/premium/showleaderBoard",
+        "http://localhost:4000/premium/showleaderBoard",
         { headers: { Authorization: token } }
       );
 
@@ -219,12 +243,9 @@ function showDownloadBtn() {
   downloadBtn.onclick = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "http://13.51.162.236:4000/user/download",
-        {
-          headers: { Authorization: token },
-        }
-      );
+      const response = await axios.get("http://localhost:4000/user/download", {
+        headers: { Authorization: token },
+      });
       if (response.status === 200) {
         //the bcakend is essentially sending a download link
         //  which if we open in browser, the file would download
@@ -244,16 +265,16 @@ function showDownloadBtn() {
 razBtn.onclick = async function (e) {
   const token = localStorage.getItem("token");
   const response = await axios.get(
-    "http://13.51.162.236:4000/purchase/premiummembership",
+    "http://localhost:4000/purchase/premiummembership",
     { headers: { Authorization: token } }
   );
   console.log("response : ", response);
   var options = {
     key: response.data.key_id,
-    order_id: response.data.order.id,
+    order_id: response.data.order.orderid,
     handler: async function (response) {
       const res = await axios.post(
-        "http://13.51.162.236:4000/purchase/updatetransactionstatus",
+        "http://localhost:4000/purchase/updatetransactionstatus",
         {
           order_id: options.order_id,
           payment_id: response.razorpay_payment_id,

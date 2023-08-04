@@ -24,7 +24,7 @@ async function login(event) {
 
     if (email && password) {
       const response = await axios.post(
-        "http://13.51.162.236:4000/user/login",
+        "http://localhost:4000/user/login",
         obj
       );
       console.log(response);

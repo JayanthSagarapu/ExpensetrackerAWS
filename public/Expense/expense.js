@@ -15,6 +15,16 @@ function addEarning() {
 
   localStorage.setItem("earningamount", EarningAmount);
   Earning.textContent = localStorage.getItem("earningamount");
+
+  Balance.textContent = Earning.textContent - Expense.textContent;
+  earninginput.value = "";
+}
+
+function resetEarning() {
+  Balance.textContent = Balance.textContent - Earning.textContent;
+
+  localStorage.setItem("earningamount", 0);
+  Earning.textContent = localStorage.getItem("earningamount");
 }
 
 async function addItem(event) {

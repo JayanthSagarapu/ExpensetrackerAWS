@@ -14,12 +14,23 @@ const Forgotpassword = require("../models/forgotPassword");
 const forgotpassword = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ where: { email } });
+    // const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ email }); //mongoose
+
     if (user) {
       const id = uuid.v4();
-      await user.createForgotpassword({ id, active: true }).catch((err) => {
-        throw new Error(err);
+      // await user.createForgotpassword({ id, active: true }).catch((err) => {
+      //   throw new Error(err);
+      // });
+
+      //mongoose
+      const forgotpassword = new Forgotpassword({
+        id,
+        active: true,
+        user: user._id,
       });
+      await forgotpassword.save();
+
       // Send email using Sendinblue API
       const tranEmailApi = new Sib.TransactionalEmailsApi();
 
@@ -55,9 +66,11 @@ const forgotpassword = async (req, res) => {
 const resetpassword = async (req, res) => {
   try {
     const id = req.params.id;
-    const forgotpasswordrequest = await Forgotpassword.findOne({
-      where: { id },
-    });
+    // const forgotpasswordrequest = await Forgotpassword.findOne({
+    //   where: { id },
+    // });
+
+    const forgotpasswordrequest = await Forgotpassword.findById({ id }); //mongoose
 
     if (forgotpasswordrequest) {
       forgotpasswordrequest.update({ isactive: false });
@@ -126,26 +139,34 @@ const updatepassword = async (req, res) => {
   try {
     const { newpassword } = req.query;
     const { resetpasswordid } = req.params;
-    const resetpasswordrequest = await Forgotpassword.findOne({
-      where: { id: resetpasswordid },
-    });
-    const user = await User.findOne({
-      where: { id: resetpasswordrequest.userId },
-    });
+    // const resetpasswordrequest = await Forgotpassword.findOne({
+    //   where: { id: resetpasswordid },
+    // });
+    // const user = await User.findOne({
+    //   where: { id: resetpasswordrequest.userId },
+    // });
+
+    //mongoose
+    const resetpasswordrequest = await Forgotpassword.findById(resetpasswordid);
+    console.log(resetpasswordrequest);
+    const user = await User.findById(resetpasswordrequest.user);
     if (user) {
       const saltRounds = 10;
-      // bcrypt.genSalt(saltRounds, function (err, salt) {
+      //   // bcrypt.genSalt(saltRounds, function (err, salt) {
       //   if (err) {
       //     console.log(err);
       //     throw new Error(err);
       //   }
+
       bcrypt.hash(newpassword, saltRounds, async function (err, hash) {
         // Store hash in your password DB.
         if (err) {
           console.log(err);
           throw new Error(err);
         }
-        await user.update({ password: hash });
+        // await user.update({ password: hash });
+        user.password = hash; //mongoose
+        await user.save();
         res
           .status(201)
           .json({ message: "Successfuly update the new password" });

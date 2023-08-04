@@ -28,7 +28,7 @@ router.get(
 );
 
 router.delete(
-  "/deleteExpense/:id",
+  "/deleteExpense/:_id",
   userAuthentication.authenticate,
   userController.deleteExpense
 );

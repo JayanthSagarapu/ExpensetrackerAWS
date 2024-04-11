@@ -24,7 +24,8 @@
     "nodemon": "^2.0.22",
     "razorpay": "^2.9.0",
     "sequelize": "^6.32.1",
+    "uuid": "^9.0.0",
     "sib-api-v3-sdk": "^8.5.0",
-    "uuid": "^9.0.0"
+    
   }
 }
